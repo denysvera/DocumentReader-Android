@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView nameTv;
     private TextView showScanner;
     private TextView recognizeImage;
+    private TextView showCameraActivity;
 
     private ImageView portraitIv;
     private ImageView docImageIv;
@@ -77,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
         nameTv = findViewById(R.id.nameTv);
         showScanner = findViewById(R.id.showScannerLink);
         recognizeImage = findViewById(R.id.recognizeImageLink);
+        showCameraActivity = findViewById(R.id.showCameraActivity);
 
         portraitIv = findViewById(R.id.portraitIv);
         docImageIv = findViewById(R.id.documentImageIv);
@@ -133,6 +135,15 @@ public class MainActivity extends AppCompatActivity {
 
                                                     //starting video processing
                                                     DocumentReader.Instance().showScanner(completion);
+                                                }
+                                            });
+
+                                            showCameraActivity.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    Intent cameraIntent = new Intent();
+                                                    cameraIntent.setClass(MainActivity.this,CameraActivity.class);
+                                                    startActivity(cameraIntent);
                                                 }
                                             });
 
@@ -222,7 +233,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
 
 
     @Override
