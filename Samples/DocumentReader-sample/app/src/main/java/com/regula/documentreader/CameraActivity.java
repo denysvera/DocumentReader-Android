@@ -48,15 +48,16 @@ public class CameraActivity extends AppCompatActivity implements Camera.PreviewC
     private Camera.Size previewSize;
     private int cameraOrientation;
     private int previewFormat;
-    private boolean isCompleted;
+    private boolean recognitionFinished = true;
+    private boolean isPauseRecognize = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
 
-        DocumentReader.Instance().processParams().scenario = "Mrz";
-        DocumentReader.Instance().processParams().multipageProcessing = true;
+//        DocumentReader.Instance().processParams().scenario = "FullProcess";
+//        DocumentReader.Instance().processParams().multipageProcessing = false;
         //let API know, that all previous results should be disposed
         DocumentReader.Instance().startNewSession();
 
@@ -90,49 +91,53 @@ public class CameraActivity extends AppCompatActivity implements Camera.PreviewC
     public void onPreviewFrame(byte[] data, final Camera camera) {
         //Filling the params with appropriate values
         ImageInputParam params = new ImageInputParam(mParams.getPreviewSize().width, mParams.getPreviewSize().height,  mParams.getPreviewFormat());
-        if(!isCompleted) { //if already completed - ignore, results won't change
-            DocumentReader.Instance().recognizeVideoFrame(data, params, new IDocumentReaderCompletion() {
-                @Override
-                public void onCompleted(int i, DocumentReaderResults documentReaderResults, String s) {
-                    switch (i) {
-                        case DocReaderAction.COMPLETE: //all done, no more frames required, results won't change
-                            mCamera.stopPreview();
-                            if (documentReaderResults.morePagesAvailable == 1) { //more pages are available for this document
-                                Toast.makeText(CameraActivity.this, "Page ready, flip", Toast.LENGTH_LONG).show();
-
-                                //letting API know, that all frames will be from different page of the same document, merge same field types
-                                DocumentReader.Instance().startNewPage();
-                                mCamera.startPreview();
-                            } else { //no more pages available
-                                synchronized (lock) {
-                                    isCompleted = true;
-                                }
-                                AlertDialog.Builder builder = new AlertDialog.Builder(CameraActivity.this);
-                                builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        DocumentReader.Instance().startNewSession();
-                                        dialogInterface.dismiss();
-                                        synchronized (lock) {
-                                            isCompleted = false;
-                                        }
-                                        mCamera.startPreview();
-                                    }
-                                });
-                                builder.setTitle("Processing finished");
-                                //getting text field value from results
-                                builder.setMessage(documentReaderResults.getTextFieldValueByType(eVisualFieldType.FT_SURNAME_AND_GIVEN_NAMES));
-                                builder.show();
-                            }
-                            break;
-                        case DocReaderAction.ERROR: //something went wrong
-                            mCamera.stopPreview();
-                            Toast.makeText(CameraActivity.this, "Error: " + s, Toast.LENGTH_LONG).show();
-                            break;
-                    }
-                }
-            });
+        if (!recognitionFinished || isPauseRecognize) {
+            //if already completed - ignore, results won't change
+            return;
         }
+
+        recognitionFinished = false;
+        DocumentReader.Instance().recognizeVideoFrame(data, params, new IDocumentReaderCompletion() {
+            @Override
+            public void onCompleted(int i, DocumentReaderResults documentReaderResults, String s) {
+                switch (i) {
+                    case DocReaderAction.COMPLETE: //all done, no more frames required, results won't change
+                        synchronized (lock) {
+                            isPauseRecognize = true;
+                        }
+                        if (documentReaderResults.morePagesAvailable == 1) { //more pages are available for this document
+                            Toast.makeText(CameraActivity.this, "Page ready, flip", Toast.LENGTH_LONG).show();
+
+                            //letting API know, that all frames will be from different page of the same document, merge same field types
+                            DocumentReader.Instance().startNewPage();
+//                            mPreview.startCameraPreview();
+                        } else { //no more pages available
+                            AlertDialog.Builder builder = new AlertDialog.Builder(CameraActivity.this);
+                            builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    DocumentReader.Instance().startNewSession();
+                                    dialogInterface.dismiss();
+                                    synchronized (lock) {
+                                        isPauseRecognize = false;
+                                    }
+                                }
+                            });
+                            builder.setTitle("Processing finished");
+                            //getting text field value from results
+                            builder.setMessage(documentReaderResults.getTextFieldValueByType(eVisualFieldType.FT_SURNAME_AND_GIVEN_NAMES));
+                            builder.show();
+                        }
+                        break;
+                    case DocReaderAction.ERROR: //something went wrong
+                        isPauseRecognize = true;
+                        Toast.makeText(CameraActivity.this, "Error: " + s, Toast.LENGTH_LONG).show();
+                        break;
+                }
+
+                recognitionFinished = true;
+            }
+        });
     }
 
     private Camera getCameraInstance(int id){
