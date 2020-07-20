@@ -22,6 +22,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.regula.documentreader.api.DocumentReader;
+import com.regula.documentreader.api.completions.IDocumentReaderCompletion;
 import com.regula.documentreader.api.enums.DocReaderAction;
 import com.regula.documentreader.api.enums.eVisualFieldType;
 import com.regula.documentreader.api.params.ImageInputParam;
@@ -90,7 +91,7 @@ public class CameraActivity extends AppCompatActivity implements Camera.PreviewC
         //Filling the params with appropriate values
         ImageInputParam params = new ImageInputParam(mParams.getPreviewSize().width, mParams.getPreviewSize().height,  mParams.getPreviewFormat());
         if(!isCompleted) { //if already completed - ignore, results won't change
-            DocumentReader.Instance().recognizeVideoFrame(data, params, new DocumentReader.DocumentReaderCompletion() {
+            DocumentReader.Instance().recognizeVideoFrame(data, params, new IDocumentReaderCompletion() {
                 @Override
                 public void onCompleted(int i, DocumentReaderResults documentReaderResults, String s) {
                     switch (i) {
