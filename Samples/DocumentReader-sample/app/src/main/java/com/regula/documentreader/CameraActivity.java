@@ -99,7 +99,7 @@ public class CameraActivity extends AppCompatActivity implements Camera.PreviewC
         recognitionFinished = false;
         DocumentReader.Instance().recognizeVideoFrame(data, params, new IDocumentReaderCompletion() {
             @Override
-            public void onCompleted(int i, DocumentReaderResults documentReaderResults, String s) {
+            public void onCompleted(int i, DocumentReaderResults documentReaderResults, Throwable throwable) {
                 switch (i) {
                     case DocReaderAction.COMPLETE: //all done, no more frames required, results won't change
                         synchronized (lock) {
@@ -131,7 +131,7 @@ public class CameraActivity extends AppCompatActivity implements Camera.PreviewC
                         break;
                     case DocReaderAction.ERROR: //something went wrong
                         isPauseRecognize = true;
-                        Toast.makeText(CameraActivity.this, "Error: " + s, Toast.LENGTH_LONG).show();
+                        Toast.makeText(CameraActivity.this, "Error: " + (throwable != null ? throwable.getMessage() : ""), Toast.LENGTH_LONG).show();
                         break;
                 }
 
