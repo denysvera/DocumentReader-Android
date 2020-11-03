@@ -12,14 +12,14 @@ import android.graphics.BitmapFactory.decodeStream
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
-import android.support.v7.app.AlertDialog
-import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.regula.documentreader.api.DocumentReader
 import com.regula.documentreader.api.completions.IDocumentReaderCompletion
 import com.regula.documentreader.api.completions.IDocumentReaderPrepareCompletion
@@ -38,6 +38,7 @@ class MainActivity : AppCompatActivity() {
     private var nameTv: TextView? = null
     private var showScanner: TextView? = null
     private var recognizeImage: TextView? = null
+    private var openScanActivity: TextView? = null
 
     private var portraitIv: ImageView? = null
     private var docImageIv: ImageView? = null
@@ -104,6 +105,7 @@ class MainActivity : AppCompatActivity() {
         nameTv = findViewById(R.id.nameTv)
         showScanner = findViewById(R.id.showScannerLink)
         recognizeImage = findViewById(R.id.recognizeImageLink)
+        openScanActivity = findViewById(R.id.openScanning)
 
         portraitIv = findViewById(R.id.portraitIv)
         docImageIv = findViewById(R.id.documentImageIv)
@@ -152,6 +154,9 @@ class MainActivity : AppCompatActivity() {
 
                                 //initialization successful
                                 if (success) {
+                                    openScanActivity!!.setOnClickListener {
+                                        startActivity(Intent(this@MainActivity,ScanActivity::class.java))
+                                    }
                                     showScanner!!.setOnClickListener {
                                         clearResults()
 

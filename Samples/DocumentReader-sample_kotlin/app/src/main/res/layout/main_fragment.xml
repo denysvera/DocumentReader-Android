@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scan"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.main.ScanFragment">
+
+    <LinearLayout
+        android:id="@+id/mainView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ffffff"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:context=".ScanActivity">
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2"
+            android:orientation="vertical"
+            android:paddingStart="20dp">
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp"
+                        android:text="document1"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:id="@+id/insuranceLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <com.google.android.material.checkbox.MaterialCheckBox
+                            android:id="@+id/insuranceCheckBox"
+
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+
+                            android:clickable="false"
+
+                            android:text="DocumentImage" />
+
+                        <ImageView
+                            android:id="@+id/insuranceImage"
+                            android:layout_width="90dp"
+                            android:layout_height="50dp"
+                            android:layout_marginStart="16dp"
+                            android:background="#F3F2F1" />
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:id="@+id/frontLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:orientation="vertical">
+
+                        <com.google.android.material.checkbox.MaterialCheckBox
+                            android:id="@+id/identityDocCheckbox"
+
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+
+                            android:clickable="false"
+                            android:text="Document 2" />
+
+                        <ImageView
+                            android:id="@+id/frontImage"
+                            android:layout_width="90dp"
+                            android:layout_height="50dp"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginBottom="10dp"
+                            android:background="#F3F2F1" />
+
+                        <ImageView
+                            android:id="@+id/backImage"
+                            android:layout_width="90dp"
+                            android:layout_height="50dp"
+                            android:layout_marginStart="16dp"
+                            android:background="#F3F2F1"
+                            android:visibility="gone" />
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:id="@+id/pictureLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:orientation="vertical">
+
+                        <com.google.android.material.checkbox.MaterialCheckBox
+                            android:id="@+id/pictureCheckbox"
+
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+
+                            android:clickable="false"
+                            android:text="picture" />
+
+                        <ImageView
+                            android:id="@+id/pictureImage"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_marginStart="16dp"
+                             />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </ScrollView>
+
+
+        </LinearLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.8"
+            android:background="@color/background">
+
+            <include
+                android:id="@+id/layoutStepOne"
+                layout="@layout/scan_document_step_one_card" />
+
+            <include
+                android:id="@+id/layoutNoInsuranceCard"
+                layout="@layout/no_insurace_card_image_card"
+                android:visibility="gone"/>
+
+
+
+
+
+            <include
+                android:id="@+id/layoutBackCard"
+                layout="@layout/back_document_result_card"
+                android:visibility="gone" />
+
+
+
+
+
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
